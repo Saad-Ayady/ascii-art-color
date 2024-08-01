@@ -12,7 +12,6 @@ type Color struct {
 
 var Colors = map[string]Color{
 	"reset":    {R: 255, G: 255, B: 255},
-	"Black":    {R: 0, G: 0, B: 0},
 	"White":    {R: 255, G: 255, B: 255},
 	"Red":      {R: 255, G: 0, B: 0},
 	"Green":    {R: 0, G: 255, B: 0},

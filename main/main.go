@@ -25,13 +25,13 @@ var (
 )
 
 func main() {
-	ArgsHandler()
 	_, Folderename, _, _ := runtime.Caller(0)
+	ArgsHandler()
 	SplitBanner := strings.Split("/"+Banner, "/")
 	Banner = SplitBanner[len(SplitBanner)-1]
 	AsciiFile, err := os.ReadFile(path.Join(path.Dir(Folderename), "/../Banners", Banner))
 	if err != nil {
-		fmt.Println("Usage: go run . [OPTION] [STRING] [BANNER]\n\nExample: go run . --align=right something standard")
+		fmt.Println("Usage: go run . [OPTION] [STRING]\n\nEX: go run . --color=<color> <substring to be colored> \"something\"")
 		os.Exit(0)
 	}
 	AsciiFile = []byte(strings.ReplaceAll(string(AsciiFile), "\r", ""))
@@ -72,13 +72,20 @@ func ArgsHandler() {
 		if strings.HasPrefix(os.Args[1], "--color=") {
 			ColorFlag = true
 			Color = strings.TrimPrefix(os.Args[1], "--color=")
-			if strings.HasPrefix(Color, "#") {
+			if len(Color) != 0 && strings.HasPrefix(Color, "#") {
 				Color, _ = Cl.HexToRgb(Color)
+			} else if len(Color) != 0 {
+				if Cl.Colors[Color].R == 0 && Cl.Colors[Color].G == 0 && Cl.Colors[Color].B == 0 {
+					Color = ""
+				} else {
+					Color = Cl.RgbColor(Cl.Colors[Color].R, Cl.Colors[Color].G, Cl.Colors[Color].B)
+				}
 			} else {
-				Color = Cl.RgbColor(Cl.Colors[Color].R, Cl.Colors[Color].G, Cl.Colors[Color].B)
+				fmt.Println("Usage: go run . [OPTION] [STRING]\n\nEX: go run . --color=<color> <substring to be colored> \"something\"")
+				os.Exit(0)
 			}
 		} else {
-			fmt.Println("Usage: go run . [OPTION] [STRING] [BANNER]\n\nExample: go run . --align=right something standard")
+			fmt.Println("Usage: go run . [OPTION] [STRING]\n\nEX: go run . --color=<color> <substring to be colored> \"something\"")
 			os.Exit(0)
 		}
 		SubString = os.Args[2]
@@ -88,10 +95,17 @@ func ArgsHandler() {
 		if strings.HasPrefix(os.Args[1], "--color=") {
 			ColorFlag = true
 			Color = strings.TrimPrefix(os.Args[1], "--color=")
-			if strings.HasPrefix(Color, "#") {
+			if len(Color) != 0 && strings.HasPrefix(Color, "#") {
 				Color, _ = Cl.HexToRgb(Color)
+			} else if len(Color) != 0 {
+				if Cl.Colors[Color].R == 0 && Cl.Colors[Color].G == 0 && Cl.Colors[Color].B == 0 {
+					Color = ""
+				} else {
+					Color = Cl.RgbColor(Cl.Colors[Color].R, Cl.Colors[Color].G, Cl.Colors[Color].B)
+				}
 			} else {
-				Color = Cl.RgbColor(Cl.Colors[Color].R, Cl.Colors[Color].G, Cl.Colors[Color].B)
+				fmt.Println("Usage: go run . [OPTION] [STRING]\n\nEX: go run . --color=<color> <substring to be colored> \"something\"")
+				os.Exit(0)
 			}
 			if os.Args[3] != "standard" && os.Args[3] != "shadow" && os.Args[3] != "thinkertoy" {
 				SubString = os.Args[2]
@@ -102,37 +116,59 @@ func ArgsHandler() {
 			}
 		} else if strings.HasPrefix(os.Args[1], "--align=") {
 			Align = strings.TrimPrefix(os.Args[1], "--align=")
-			Text = os.Args[2]
-			Banner = os.Args[3] + ".txt"
-		} else if strings.HasPrefix(os.Args[1], "--output=") {
-			OutputFile = strings.TrimPrefix(os.Args[1], "--output=")
-			if OutputFile == "" {
+			if len(Align) == 0 {
 				fmt.Println("Usage: go run . [OPTION] [STRING] [BANNER]\n\nExample: go run . --align=right something standard")
 				os.Exit(0)
 			}
 			Text = os.Args[2]
 			Banner = os.Args[3] + ".txt"
+		} else if strings.HasPrefix(os.Args[1], "--output=") {
+			OutputFile = strings.TrimPrefix(os.Args[1], "--output=")
+			_, Folderename, _, _ := runtime.Caller(0)
+			err := os.Mkdir(path.Join(path.Dir(Folderename), "../Output"), 0o776)
+			if !os.IsExist(err) {
+				fmt.Println("Usage: go run . [OPTION] [STRING]\n\nEX: go run . --color=<color> <substring to be colored> \"something\"")
+				os.Exit(0)
+			}
+			if OutputFile == "" {
+				fmt.Println("Usage: go run . [OPTION] [STRING]\n\nEX: go run . --color=<color> <substring to be colored> \"something\"")
+				os.Exit(0)
+			}
+			Text = os.Args[2]
+			Banner = os.Args[3] + ".txt"
 		} else {
-			fmt.Println("Usage: go run . [OPTION] [STRING] [BANNER]\n\nExample: go run . --align=right something standard")
+			fmt.Println("Usage: go run . [OPTION] [STRING]\n\nEX: go run . --color=<color> <substring to be colored> \"something\"")
 			os.Exit(0)
 		}
 	case 3:
 		if strings.HasPrefix(os.Args[1], "--color=") {
 			ColorFlag = true
 			Color = strings.TrimPrefix(os.Args[1], "--color=")
-			if strings.HasPrefix(Color, "#") {
+			if len(Color) != 0 && strings.HasPrefix(Color, "#") {
 				Color, _ = Cl.HexToRgb(Color)
+			} else if len(Color) != 0 {
+				if Cl.Colors[Color].R == 0 && Cl.Colors[Color].G == 0 && Cl.Colors[Color].B == 0 {
+					Color = ""
+				} else {
+					Color = Cl.RgbColor(Cl.Colors[Color].R, Cl.Colors[Color].G, Cl.Colors[Color].B)
+				}
 			} else {
-				Color = Cl.RgbColor(Cl.Colors[Color].R, Cl.Colors[Color].G, Cl.Colors[Color].B)
+				fmt.Println("Usage: go run . [OPTION] [STRING]\n\nEX: go run . --color=<color> <substring to be colored> \"something\"")
 			}
 			Text = os.Args[2]
 		} else if strings.HasPrefix(os.Args[1], "--align=") {
 			Align = strings.TrimPrefix(os.Args[1], "--align=")
 			Text = os.Args[2]
 		} else if strings.HasPrefix(os.Args[1], "--output=") {
+			_, Folderename, _, _ := runtime.Caller(0)
 			OutputFile = strings.TrimPrefix(os.Args[1], "--output=")
+			err := os.Mkdir(path.Join(path.Dir(Folderename), "../Output"), 0o776)
+			if !os.IsExist(err) {
+				fmt.Println("Usage: go run . [OPTION] [STRING]\n\nEX: go run . --color=<color> <substring to be colored> \"something\"")
+				os.Exit(0)
+			}
 			if OutputFile == "" {
-				fmt.Println("Usage: go run . [OPTION] [STRING] [BANNER]\n\nExample: go run . --align=right something standard")
+				fmt.Println("Usage: go run . [OPTION] [STRING] [BANNER]\n\nEX: go run . --output=<fileName.txt> something standard")
 				os.Exit(0)
 			}
 			Text = os.Args[2]
@@ -143,7 +179,7 @@ func ArgsHandler() {
 	case 2:
 		Text = os.Args[1]
 	default:
-		fmt.Println("Usage: go run . [OPTION] [STRING] [BANNER]\n\nExample: go run . --align=right something standard")
+		fmt.Println("Usage: go run . [OPTION] [STRING]\n\nEX: go run . --color=<color> <substring to be colored> \"something\"")
 		os.Exit(0)
 	}
 }
